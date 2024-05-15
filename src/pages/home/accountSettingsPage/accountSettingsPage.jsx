@@ -1,6 +1,6 @@
 
 export default function AccountSettingsPage() {
   return (
-    <div>accountSettingsPage</div>
+    <div className="text-3xl font-bold underline">accountSettingsPage</div>
   )
 }

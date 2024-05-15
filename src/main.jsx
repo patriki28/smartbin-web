@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { mainRoutes } from "./routes/mainRoutes.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css'
 
 const router = createBrowserRouter(mainRoutes);
 
