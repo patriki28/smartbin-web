@@ -10,7 +10,7 @@ export default function PasswordInput({ password, onChange }) {
       <input
         placeholder="Enter Password"
         value={password}
-        className="w-100 border-0 fs-5" 
+        className="w-100 border-0 fs-5"
         type={showPassword ? "text" : "password"}
         onChange={onChange}
       />
@@ -19,7 +19,7 @@ export default function PasswordInput({ password, onChange }) {
         className="border-0"
         onClick={() => setShowPassword(!showPassword)}
       >
-        {showPassword ? <BsEyeSlash  size={30}/> : <BsEye size={30} />}
+        {showPassword ? <BsEyeSlash size={30} /> : <BsEye size={30} />}
       </Button>
     </div>
   );
