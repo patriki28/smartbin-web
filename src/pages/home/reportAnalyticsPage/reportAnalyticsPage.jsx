@@ -1,6 +1,7 @@
-
 export default function ReportAnalyticsPage() {
   return (
-    <div>reportAnalyticsPage</div>
-  )
+    <div>
+      <h1 className="text-3xl font-bold">Reports and Analytics</h1>
+    </div>
+  );
 }
