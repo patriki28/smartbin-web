@@ -78,10 +78,10 @@ export default function LoginCard() {
   return (
     <Card style={{ width: "800px" }} className="rounded-5 p-2">
       <Card.Body>
-        <h1>Smart Bin Management</h1>
-        <p className="fs-5">Login to continue your smart bin management.</p>
+        <h1 className="text-5xl font-semibold">Smart Bin Management</h1>
+        <p className="text-xl my-2">Login to continue your smart bin management.</p>
         <hr />
-        <Form>
+        <Form className="mt-2">
           <Form.Group controlId="formBasicEmail" className="mb-2">
             <Form.Label>Email address</Form.Label>
             <Form.Control
