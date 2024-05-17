@@ -1,11 +1,26 @@
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
-import { Link } from "react-router-dom";
-import { dropdownRoutes } from "../routes/dropdownRoutes";
+import { useState, useEffect } from 'react';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebase';
+import { Link } from 'react-router-dom';
+import { dropdownRoutes } from '../routes/dropdownRoutes';
 
 export default function DropdownMenu({ dropdownOpen, handleDropdown }) {
+  const [email, setEmail] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setEmail(user.email);
+      } else {
+        setEmail(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
+    if (window.confirm('Are you sure you want to logout?')) {
       signOut(auth);
     }
   };
@@ -19,13 +34,14 @@ export default function DropdownMenu({ dropdownOpen, handleDropdown }) {
         alt="user photo"
       />
       <div
-        className={`text-base list-none bg-white divide-y divide-black hover:text-white rounded shadow
-        ${dropdownOpen ? "fixed top-20 right-2" : "hidden"}`}
+        className={`text-base list-none bg-white divide-y divide-black hover:text-white rounded shadow ${
+          dropdownOpen ? 'fixed top-20 right-2' : 'hidden'
+        }`}
         id="dropdown-user"
       >
         <div className="px-4 py-3" role="none">
           <p className="text-sm font-medium text-gray-900 truncate" role="none">
-            {auth.currentUser.email ? auth.currentUser.email : "Admin"}
+            {email ? email : 'Admin'}
           </p>
         </div>
         <ul className="py-1" role="none">
