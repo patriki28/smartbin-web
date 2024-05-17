@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button, Image } from "react-bootstrap";
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../../firebase";
 import PasswordInput from "../input/passwordInput";
+import Logo from "../../assets/logo/logo.png";
 
 export default function LoginCard() {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ export default function LoginCard() {
     setLoading(true);
 
     if (!email || !password) return alert("Please fill up all fields!");
-  
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -43,7 +44,8 @@ export default function LoginCard() {
       if (error.code === "auth/user-not-found") {
         alert("User not found. Please check your email address.");
       } else if (error.code === "auth/invalid-credential") {
-        errorMessage = "Invalid credentials provided. Please check your email and password.";
+        errorMessage =
+          "Invalid credentials provided. Please check your email and password.";
       }
 
       alert(errorMessage);
@@ -58,7 +60,7 @@ export default function LoginCard() {
     setLoading(true);
 
     if (!email) return alert("Please enter your email first!");
-  
+
     try {
       await sendPasswordResetEmail(auth, email);
 
@@ -78,8 +80,13 @@ export default function LoginCard() {
   return (
     <Card style={{ width: "800px" }} className="rounded-5 p-2">
       <Card.Body>
-        <h1 className="text-5xl font-semibold">Smart Bin Management</h1>
-        <p className="text-xl my-2">Login to continue your smart bin management.</p>
+        <div className="flex items-center">
+          <Image src={Logo} width={100} />
+          <h1 className="text-5xl font-bold">Smart Bin Management</h1>
+        </div>
+        <p className="text-xl my-2">
+          Login to continue to manage your smart bin.
+        </p>
         <hr />
         <Form className="mt-2">
           <Form.Group controlId="formBasicEmail" className="mb-2">

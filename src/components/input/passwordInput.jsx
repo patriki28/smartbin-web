@@ -10,7 +10,7 @@ export default function PasswordInput({ password, onChange }) {
       <input
         placeholder="Enter Password"
         value={password}
-        className="w-100 border-0 fs-5"
+        className="w-100 border-0 fs-5 outline-0"
         type={showPassword ? "text" : "password"}
         onChange={onChange}
       />
