@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Form, Button, Image } from "react-bootstrap";
+import { Card, Form, Button, Image, Spinner } from "react-bootstrap";
 import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -42,7 +42,7 @@ export default function LoginCard() {
       let errorMessage = "An error occurred during login.";
 
       if (error.code === "auth/user-not-found") {
-        alert("User not found. Please check your email address.");
+        errorMessage = "User not found. Please check your email address.";
       } else if (error.code === "auth/invalid-credential") {
         errorMessage =
           "Invalid credentials provided. Please check your email and password.";
@@ -120,9 +120,10 @@ export default function LoginCard() {
           <Button
             size="lg"
             onClick={handleLogin}
-            variant="dark w-100 mt-2 fw-semibold"
+            disabled={loading}
+            variant="dark w-100 mt-2 fw-semibold flex justify-center items-center"
           >
-            Login
+            {loading ? <Spinner animation="border" size={20} /> : "Login"}
           </Button>
         </Form>
       </Card.Body>
