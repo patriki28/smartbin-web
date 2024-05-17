@@ -16,23 +16,31 @@ export const mainRoutes = [
   },
   {
     path: "/home",
-    element: (
-      <ProtectedRoutes>
-        <HomeLayout />
-      </ProtectedRoutes>
-    ),
+    element: <HomeLayout />,
     children: [
       {
         path: "dashboard",
-        element: <DashboardPage />,
+        element: (
+          <ProtectedRoutes>
+            <DashboardPage />
+          </ProtectedRoutes>
+        ),
       },
       {
         path: "reportAnalytics",
-        element: <ReportAnalyticsPage />,
+        element: (
+          <ProtectedRoutes>
+            <ReportAnalyticsPage />
+          </ProtectedRoutes>
+        ),
       },
       {
         path: "accountSettings",
-        element: <AccountSettingsPage />,
+        element: (
+          <ProtectedRoutes>
+            <AccountSettingsPage />
+          </ProtectedRoutes>
+        ),
       },
     ],
   },
