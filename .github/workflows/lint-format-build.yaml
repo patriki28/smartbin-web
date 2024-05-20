@@ -1,0 +1,56 @@
+name: Lint, Format, and Build
+
+on:
+    pull_request:
+        branches:
+            - main # Or your default branch
+    pull_request_target:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }} # Checkout the PR's head
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '18' # Or your preferred Node version
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Build
+              run: npm run build
+
+            - name: Check for Build Output
+              run: |
+                  if [[ -d dist ]] && [[ $(ls dist | wc -l) -gt 0 ]]; then
+                    echo "Build output found."
+                  else
+                    echo "No build output found. Build might have failed."
+                    exit 1  # Fail the workflow
+                  fi
+    lint-and-format:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }} # Checkout the PR's head
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: '18' # Or your preferred Node version
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run ESLint
+              run: npm run lint
+            - name: Run Prettier
+              run: npm run format && git diff --exit-code # Fail if formatting is not correct
