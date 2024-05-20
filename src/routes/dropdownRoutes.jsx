@@ -5,7 +5,7 @@ export const dropdownRoutes = [
     label: "Dashboard",
   },
   {
-    path: "/home/accountSettings",
-    label: "Settings",
+    path: "/home/accountSettings"
+    label: "Settings"
   },
 ];
