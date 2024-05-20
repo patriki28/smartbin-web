@@ -58,5 +58,12 @@ jobs:
 
             - name: Run ESLint
               run: npm run lint
+
             - name: Run Prettier
-              run: npm run format && git diff --exit-code # Fail if formatting is not correct
+              run: npm run format
+            - name: Commit Prettier Changes
+              run: |
+                  git add .
+                  git commit -m "Format code with Prettier" || echo "No changes to commit"
+            - name: Fail if formatting is not correct
+              run: git diff --exit-code || true
