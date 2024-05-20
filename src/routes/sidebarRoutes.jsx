@@ -7,8 +7,13 @@ export const sidebarRoutes = [
     label: "Dashboard",
   },
   {
+    path: "/home/reportsAnalytics",
+    icon: <FaHome size={25}/>,
+    label: "Dashboard",
+  },
+  {
     path: "/home/accountSettings",
     icon: <FaCog size={25}/>,
     label: "Settings",
   },
-];
+]

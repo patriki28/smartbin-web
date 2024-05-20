@@ -31,6 +31,14 @@ export const mainRoutes = [
         ),
       },
       {
+        path: "reportsAnalytics",
+        element: (
+          <ProtectedRoutes>
+            <DashboardPage />
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "accountSettings",
         element: (
           <ProtectedRoutes>
