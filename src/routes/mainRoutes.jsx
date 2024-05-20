@@ -1,43 +1,27 @@
-import ProtectedRoutes from "../components/ProtectedRoutes";
-import HomeLayout from "../layouts/homeLayout";
-import LoginPage from "../pages/auth/loginPage/loginPage";
-import AccountSettingsPage from "../pages/home/accountSettingsPage/accountSettingsPage";
-import DashboardPage from "../pages/home/dashboardPage/dashboardPage";
-import PageNotFoundPage from "../pages/pageNotFoundPage/pageNotFoundPage";
+import ProtectedRoutes from '../components/ProtectedRoutes';
+import LoginPage from '../pages/auth/loginPage/loginPage';
+import AccountSettingsPage from '../pages/home/accountSettingsPage/accountSettingsPage';
+import PageNotFoundPage from '../pages/pageNotFoundPage/pageNotFoundPage';
 
 export const mainRoutes = [
-  {
-    path: "*",
-    element: <PageNotFoundPage/>,
-  },
-  {
-    path: "/",
-    element: (
-      <ProtectedRoutes>
-        <LoginPage />
-      </ProtectedRoutes>
-    ),
-  },
-  {
-    path: "/home",
-    element: <HomeLayout />,
-    children: [
-      {
-        path: "dashboard",
+    {
+        path: '*',
+        element: <PageNotFoundPage />,
+    },
+    {
+        path: '/',
         element: (
-          <ProtectedRoutes>
-            <DashboardPage />
-          </ProtectedRoutes>
+            <ProtectedRoutes>
+                <LoginPage />
+            </ProtectedRoutes>
         ),
-      },
-      {
-        path: "accountSettings",
+    },
+    {
+        path: 'accountSettings',
         element: (
-          <ProtectedRoutes>
-            <AccountSettingsPage />
-          </ProtectedRoutes>
+            <ProtectedRoutes>
+                <AccountSettingsPage />
+            </ProtectedRoutes>
         ),
-      },
-    ],
-  },
+    },
 ];
