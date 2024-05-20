@@ -3,7 +3,6 @@ import HomeLayout from "../layouts/homeLayout";
 import LoginPage from "../pages/auth/loginPage/loginPage";
 import AccountSettingsPage from "../pages/home/accountSettingsPage/accountSettingsPage";
 import DashboardPage from "../pages/home/dashboardPage/dashboardPage";
-import ReportAnalyticsPage from "../pages/home/reportAnalyticsPage/reportAnalyticsPage";
 import PageNotFoundPage from "../pages/pageNotFoundPage/pageNotFoundPage";
 
 export const mainRoutes = [
@@ -28,14 +27,6 @@ export const mainRoutes = [
         element: (
           <ProtectedRoutes>
             <DashboardPage />
-          </ProtectedRoutes>
-        ),
-      },
-      {
-        path: "reportAnalytics",
-        element: (
-          <ProtectedRoutes>
-            <ReportAnalyticsPage />
           </ProtectedRoutes>
         ),
       },
