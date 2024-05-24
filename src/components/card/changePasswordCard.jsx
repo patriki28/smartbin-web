@@ -49,7 +49,7 @@ export default function ChangePasswordCard() {
     };
 
     return (
-        <Card style={{ width: '800px' }} className="rounded-5 p-2 my-2">
+        <Card style={{ maxWidth: '800px' }} className="rounded-5 p-2 my-2">
             <Card.Body>
                 <h2 className="text-2xl font-bold">Change Password</h2>
                 <hr className="my-2" />
