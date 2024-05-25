@@ -12,6 +12,18 @@ export const wasteData = [
         type: 'non-organic',
     },
     {
+        time_stamp: '2024-05-17T09:45:00Z',
+        type: 'non-organic',
+    },
+    {
+        time_stamp: '2024-05-17T10:30:00Z',
+        type: 'metal',
+    },
+    {
+        time_stamp: '2024-05-17T10:30:00Z',
+        type: 'wet',
+    },
+    {
         time_stamp: '2024-05-17T10:30:00Z',
         type: 'metal',
     },
