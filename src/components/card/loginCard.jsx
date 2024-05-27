@@ -72,9 +72,9 @@ export default function LoginCard() {
     return (
         <Card style={{ width: '800px' }} className="rounded-5 p-2">
             <Card.Body>
-                <div className="flex items-center">
+                <div className="flex flex-wrap justify-center items-center">
                     <Image src={Logo} width={100} />
-                    <h1 className="text-5xl font-bold">Smart Bin Management</h1>
+                    <h1 className="text-5xl font-bold text-center">Smart Bin Management</h1>
                 </div>
                 <p className="text-xl my-2">Login to continue to manage your smart bin.</p>
                 <hr />

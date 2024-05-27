@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Card } from 'react-bootstrap';
-import { sortData } from '../../utils/sortData';
+import { sortDate } from '../../utils/sortDate';
 import { prepareChartData } from '../../utils/prepareChartData';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -10,7 +10,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 export default function LineChart({ title, data, filterBy, values, valueKey }) {
     const [selectedValue, setSelectedValue] = useState('All');
 
-    const filteredData = selectedValue === 'All' ? sortData(data) : sortData(data).filter((item) => item[filterBy] === selectedValue);
+    const filteredData = selectedValue === 'All' ? sortDate(data) : sortDate(data).filter((item) => item[filterBy] === selectedValue);
     const chartData = prepareChartData(filteredData, filterBy, values, valueKey);
 
     const chartOptions = {
