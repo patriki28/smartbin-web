@@ -16,12 +16,10 @@ export default function ChangePasswordCard() {
 
         if (loading) return;
 
-        if (newPassword !== confirmPassword) {
-            alert('New password and confirmation password do not match.');
-            return;
-        }
-
         setLoading(true);
+
+        if (!currentPassword || !newPassword || !confirmPassword) return alert('All fields are required!');
+        if (newPassword !== confirmPassword) return alert('New password and confirmation password do not match.');
 
         try {
             if (auth.currentUser) {
@@ -34,10 +32,10 @@ export default function ChangePasswordCard() {
             }
         } catch (error) {
             console.log(error);
-            let errorMessage = 'An error occurred during login.';
+            let errorMessage = 'An error occurred in changing your password.';
 
             if (error.code === 'auth/user-not-found') {
-                errorMessage = 'User not found. Please check your email address.';
+                errorMessage = 'User not found!';
             } else if (error.code === 'auth/invalid-credential') {
                 errorMessage = 'Invalid credentials provided. Please check your password.';
             }
