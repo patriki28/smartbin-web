@@ -34,7 +34,7 @@ export default function ChangePasswordCard() {
             }
         } catch (error) {
             console.log(error);
-            let errorMessage = 'An error occurred during login.';
+            let errorMessage = 'An error occurred during changing your password.';
 
             if (error.code === 'auth/user-not-found') {
                 errorMessage = 'User not found. Please check your email address.';
