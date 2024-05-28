@@ -20,7 +20,7 @@ const ProtectedRoutes = ({ children }) => {
         return () => {
             listen();
         };
-    }, [navigate, authUser]);
+    }, [authUser]);
 
     return <>{children}</>;
 };

@@ -1,13 +1,20 @@
 import { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Form } from 'react-bootstrap';
-import { fillData } from '../../../mocks/fillData';
 import { fillColumnsData } from '../../../mocks/fillColumnsData';
 import { filterDataBySearchQuery } from '../../../utils/filterDataBySearchQuery';
+import useFetchData from '../../../hooks/useFetchData';
+import Loader from '../../../components/Loader';
 
 export default function ReportAnalyticsPage() {
     const [searchQuery, setSearchQuery] = useState('');
-    const filteredData = filterDataBySearchQuery(fillData, searchQuery);
+    const { data, loading, error } = useFetchData('fill-levels');
+
+    if (loading) return <Loader />;
+
+    if (error) return <div>{error}</div>;
+
+    const filteredData = filterDataBySearchQuery(data, searchQuery);
 
     return (
         <div>
