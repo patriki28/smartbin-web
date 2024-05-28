@@ -1,22 +1,22 @@
 export const notificationData = [
     {
         title: 'Notification 1',
-        date: '2024-05-17',
+        time_stamp: '2024-05-17T10:30:00Z',
     },
     {
         title: 'Notification 2',
-        date: '2024-05-16',
+        time_stamp: '2024-05-17T10:30:00Z',
     },
     {
         title: 'Notification 3',
-        date: '2024-05-15',
+        time_stamp: '2024-05-17T10:30:00Z',
     },
     {
         title: 'Notification 4',
-        date: '2024-05-16',
+        time_stamp: '2024-05-17T10:30:00Z',
     },
     {
         title: 'Notification 5',
-        date: '2024-05-16',
+        time_stamp: '2024-05-17T10:30:00Z',
     },
 ];
