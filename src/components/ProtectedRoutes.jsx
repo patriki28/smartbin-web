@@ -10,8 +10,13 @@ const ProtectedRoutes = ({ children }) => {
     useEffect(() => {
         const listen = onAuthStateChanged(auth, (user) => {
             if (user) {
-                setAuthUser(user);
-                navigate('/home/dashboard');
+                if (user.emailVerified) {
+                    setAuthUser(user);
+                    navigate('/home/dashboard');
+                } else {
+                    alert('Verify your email first');
+                    navigate('/');
+                }
             } else {
                 setAuthUser(null);
                 navigate('/');
