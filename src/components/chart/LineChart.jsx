@@ -3,21 +3,41 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Card } from 'react-bootstrap';
 import { sortDate } from '../../utils/sortDate';
-import { prepareChartData } from '../../utils/prepareChartData';
+import { prepareFillChartData } from '../../utils/prepareFillChartData';
+import filterTimePeriod from '../../utils/filterTimePeriod';
+import Select from '../select/Select';
+import { timePeriodData } from '../../mocks/timePeriodData';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function LineChart({ title, data, filterBy, values, valueKey }) {
     const [selectedValue, setSelectedValue] = useState('All');
+    const [timePeriod, setTimePeriod] = useState('daily');
 
-    const filteredData = selectedValue === 'All' ? sortDate(data) : sortDate(data).filter((item) => item[filterBy] === selectedValue);
-    const chartData = prepareChartData(filteredData, filterBy, values, valueKey);
+    const filteredData = filterTimePeriod(data);
+    const sortedData = sortDate(filteredData);
+    const chartData = prepareFillChartData(sortedData, filterBy, values, valueKey, timePeriod, selectedValue);
 
     const chartOptions = {
         responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                    callback: function (value) {
+                        return value + '%';
+                    },
+                },
+            },
+        },
         plugins: {
-            legend: {
-                position: 'top',
+            tooltip: {
+                callbacks: {
+                    label: function (tooltipItem) {
+                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
+                    },
+                },
             },
         },
     };
@@ -28,23 +48,15 @@ export default function LineChart({ title, data, filterBy, values, valueKey }) {
                 <div className="flex flex-wrap gap-2 items-center justify-center sm:justify-between">
                     <h2 className="text-2xl font-bold">{title || `Line Charts`}</h2>
 
-                    <div>
-                        <label htmlFor="filter-value" className="font-semibold text-lg">
-                            Select {filterBy}:
-                        </label>
-                        <select
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Select
+                            label={`Select ${filterBy}`}
                             id="filter-value"
                             value={selectedValue}
-                            className="border rounded-lg p-2 ml-2"
-                            onChange={(e) => setSelectedValue(e.target.value)}
-                        >
-                            <option value="All">All {filterBy}</option>
-                            {values.map((value) => (
-                                <option key={value} value={value}>
-                                    {value}
-                                </option>
-                            ))}
-                        </select>
+                            options={[{ label: `All ${filterBy}`, value: 'All' }, ...values.map((value) => ({ label: value, value }))]}
+                            onChange={setSelectedValue}
+                        />
+                        <Select label="Select Time Period" id="filter-period" value={timePeriod} options={timePeriodData} onChange={setTimePeriod} />
                     </div>
                 </div>
                 <hr className="my-2" />

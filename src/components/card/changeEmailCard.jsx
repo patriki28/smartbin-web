@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { auth } from '../../../firebase';
-import { EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail } from 'firebase/auth';
+import { EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail, signOut } from 'firebase/auth';
 import { Form, Button, Spinner } from 'react-bootstrap';
 import PasswordInput from '../input/passwordInput';
 
@@ -18,6 +18,8 @@ export default function ChangeEmailCard() {
         setLoading(true);
 
         try {
+            if (auth.currentUser.email === email) return alert("You can't change your email to your current email");
+
             if (auth.currentUser) {
                 const credential = EmailAuthProvider.credential(auth.currentUser.email, password);
                 await reauthenticateWithCredential(auth.currentUser, credential);
@@ -25,6 +27,7 @@ export default function ChangeEmailCard() {
                 await verifyBeforeUpdateEmail(auth.currentUser, email);
 
                 alert('Please verify your new email to change your email!');
+                signOut(auth);
             }
         } catch (error) {
             console.log(error);
@@ -33,7 +36,7 @@ export default function ChangeEmailCard() {
             if (error.code === 'auth/user-not-found') {
                 errorMessage = 'User not found!';
             } else if (error.code === 'auth/invalid-credential') {
-                errorMessage = 'Invalid credentials provided. Please check your email.';
+                errorMessage = 'Invalid credentials provided. Please enter your current password.';
             }
 
             alert(errorMessage);
@@ -51,7 +54,7 @@ export default function ChangeEmailCard() {
                 <Form onSubmit={handleChangeEmail}>
                     <Form.Group controlId="email" className="mt-2">
                         <Form.Label>Email: </Form.Label>
-                        <Form.Control size="lg" value={email} placeholder="Enter a new email" onChange={(e) => setEmail(e.target.value)} />
+                        <Form.Control size="lg" value={email} placeholder="Enter a new email" onChange={(e) => setEmail(e.target.value)} required />
                     </Form.Group>
                     <Form.Group controlId="currentPassword" className="mt-2">
                         <Form.Label>Current Password</Form.Label>

@@ -1,10 +1,12 @@
-export const prepareChartData = (data, filterBy, values, valueKey) => {
-    const labels = [...new Set(data.map((item) => new Date(item.time_stamp).toLocaleString()))];
+import formatTimePeriodLabel from './formatTimePeriodLabel';
+
+export const prepareFillChartData = (data, filterBy, values, valueKey, timePeriod, selectedValue) => {
+    const labels = [...new Set(data.map((item) => formatTimePeriodLabel(new Date(item.time_stamp), timePeriod)))];
 
     const datasets = values.map((value, index) => {
         const valueData = data.filter((item) => item[filterBy] === value);
         const valueValues = labels.map((label) => {
-            const items = valueData.filter((d) => new Date(d.time_stamp).toLocaleString() === label);
+            const items = valueData.filter((d) => formatTimePeriodLabel(new Date(d.time_stamp), timePeriod) === label);
             return valueKey ? (items.length > 0 ? items[0][valueKey] : null) : items.length;
         });
 
@@ -19,5 +21,7 @@ export const prepareChartData = (data, filterBy, values, valueKey) => {
         };
     });
 
-    return { labels, datasets };
+    const filteredDatasets = selectedValue === 'All' ? datasets : datasets.filter((dataset) => dataset.label === selectedValue);
+
+    return { labels, datasets: filteredDatasets };
 };
