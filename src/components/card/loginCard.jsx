@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button, Image, Spinner } from 'react-bootstrap';
-import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../firebase';
 import PasswordInput from '../input/passwordInput';
 import Logo from '../../assets/logo/logo.png';
@@ -26,6 +26,7 @@ export default function LoginCard() {
             if (user.emailVerified) {
                 alert('You have successfully logged in!');
             } else {
+                sendEmailVerification(email);
                 alert('Please verify your email to login.');
             }
 

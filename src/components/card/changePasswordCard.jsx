@@ -37,7 +37,7 @@ export default function ChangePasswordCard() {
             if (error.code === 'auth/user-not-found') {
                 errorMessage = 'User not found!';
             } else if (error.code === 'auth/invalid-credential') {
-                errorMessage = 'Invalid credentials provided. Please check your password.';
+                errorMessage = 'Invalid credentials provided. Please enter your current password.';
             }
 
             alert(errorMessage);
