@@ -16,7 +16,7 @@ export default function DashboardPage() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-3">Dashboard</h1>
+            <h1 className="text-3xl font-bold mb-3">Admin Dashboard</h1>
             <div className="flex flex-col justify-center items-center gap-3 xl:flex-row">
                 <LineChart title="Bin Fill-Level Charts" data={fillLevelsData} filterBy="bin" values={binData} valueKey="percentage" />
                 <BarChart title="Waste Charts" data={wasteData} filterBy="type" values={wasteTypeData} />
