@@ -1,11 +1,12 @@
 import ProtectedRoutes from '../components/ProtectedRoutes';
-import LoginPage from '../pages/auth/loginPage/loginPage';
-import DashboardPage from '../pages/home/dashboardPage/dashboardPage';
-import ReportAnalyticsPage from '../pages/home/reportAnalyticsPage/reportAnalyticsPage';
-import AccountSettingsPage from '../pages/home/accountSettingsPage/accountSettingsPage';
-import PageNotFoundPage from '../pages/pageNotFoundPage/pageNotFoundPage';
+import LoginPage from '../pages/auth/LoginPage';
+import DashboardPage from '../pages/home/DashboardPage';
+import ReportAnalyticsPage from '../pages/home/ReportAnalyticsPage';
+import UserManagementPage from '../pages/home/UserManagementPage';
+import AccountSettingsPage from '../pages/home/AccountSettingsPage';
+import PageNotFoundPage from '../pages/shared/PageNotFoundPage';
+import HomeLayout from '../layouts/HomeLayout';
 
-import HomeLayout from '../layouts/homeLayout';
 export const mainRoutes = [
     {
         path: '*',
@@ -40,6 +41,14 @@ export const mainRoutes = [
                 element: (
                     <ProtectedRoutes>
                         <ReportAnalyticsPage />
+                    </ProtectedRoutes>
+                ),
+            },
+            {
+                path: 'user-management',
+                element: (
+                    <ProtectedRoutes>
+                        <UserManagementPage />
                     </ProtectedRoutes>
                 ),
             },

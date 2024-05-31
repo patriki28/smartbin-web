@@ -40,7 +40,7 @@ export default function HomeLayout() {
 
             <Sidebar navOpen={navOpen} />
 
-            <div className="p-4 mt-14 sm:ml-64">
+            <div className="px-4 py-5 mt-14 sm:ml-64">
                 <Outlet />
             </div>
         </div>

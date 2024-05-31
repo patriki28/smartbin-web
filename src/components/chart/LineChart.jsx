@@ -3,6 +3,7 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Card } from 'react-bootstrap';
 import { sortDate } from '../../utils/sortDate';
+import { chartOptions } from '../../utils/chartOptions';
 import { prepareFillChartData } from '../../utils/prepareFillChartData';
 import filterTimePeriod from '../../utils/filterTimePeriod';
 import Select from '../select/Select';
@@ -17,30 +18,6 @@ export default function LineChart({ title, data, filterBy, values, valueKey }) {
     const filteredData = filterTimePeriod(data);
     const sortedData = sortDate(filteredData);
     const chartData = prepareFillChartData(sortedData, filterBy, values, valueKey, timePeriod, selectedValue);
-
-    const chartOptions = {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 100,
-                ticks: {
-                    callback: function (value) {
-                        return value + '%';
-                    },
-                },
-            },
-        },
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function (tooltipItem) {
-                        return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toFixed(2) + '%';
-                    },
-                },
-            },
-        },
-    };
 
     return (
         <Card className="w-full rounded-5 p-2 my-2">

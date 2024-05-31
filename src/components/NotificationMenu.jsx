@@ -1,6 +1,6 @@
+import { Spinner } from 'react-bootstrap';
 import { FaBell } from 'react-icons/fa';
 import { sortDate } from '../utils/sortDate';
-import { Spinner } from 'react-bootstrap';
 import useFetchData from '../hooks/useFetchData';
 import formatDate from '../utils/formatDate';
 

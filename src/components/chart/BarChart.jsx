@@ -15,7 +15,7 @@ export default function BarChart({ title, data, filterBy, values }) {
 
     const filteredData = selectedValue === 'All' ? sortedData : sortedData.filter((item) => item.type === selectedValue);
 
-    const chartData = prepareWasteChartData(filteredData, values);
+    const chartData = prepareWasteChartData(filteredData, values, sortedData.length);
 
     return (
         <Card className="w-full rounded-5 p-2 my-2">

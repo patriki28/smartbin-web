@@ -1,6 +1,6 @@
 import { Row, Col } from 'react-bootstrap';
-import LoginCard from '../../../components/card/loginCard';
-import LoginBackground from '../../../assets/backgroundImage/loginBackground.png';
+import LoginCard from '../../components/card/LoginCard';
+import LoginBackground from '../../assets/backgroundImage/loginBackground.png';
 
 export default function LoginPage() {
     return (

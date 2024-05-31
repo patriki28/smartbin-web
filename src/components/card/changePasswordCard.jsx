@@ -3,7 +3,7 @@ import { Card } from 'react-bootstrap';
 import { auth } from '../../../firebase';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { Form, Button, Spinner } from 'react-bootstrap';
-import PasswordInput from '../input/passwordInput';
+import PasswordInput from '../input/PasswordInput';
 
 export default function ChangePasswordCard() {
     const [loading, setLoading] = useState(false);
@@ -47,13 +47,16 @@ export default function ChangePasswordCard() {
     };
 
     return (
-        <Card style={{ maxWidth: '800px' }} className="rounded-5 p-2 my-2">
+        <Card style={{ maxWidth: '700px' }} className="w-full rounded-5 p-2 my-2">
             <Card.Body>
                 <h2 className="text-2xl font-bold">Change Password</h2>
+                <p>Password must be atleast 6 characters.</p>
                 <hr className="my-2" />
                 <Form onSubmit={handleChangePassword}>
                     <Form.Group controlId="currentPassword" className="mt-2">
-                        <Form.Label>Current Password</Form.Label>
+                        <Form.Label>
+                            Current Password <span className="text-red-500">*</span>
+                        </Form.Label>
                         <PasswordInput
                             value={currentPassword}
                             placeholder="Enter your current password"
@@ -61,20 +64,26 @@ export default function ChangePasswordCard() {
                         />
                     </Form.Group>
                     <Form.Group controlId="newPassword" className="mt-2">
-                        <Form.Label>New Password</Form.Label>
+                        <Form.Label>
+                            New Password <span className="text-red-500">*</span>
+                        </Form.Label>
                         <PasswordInput value={newPassword} placeholder="Enter a new password" onChange={(e) => setNewPassword(e.target.value)} />
                     </Form.Group>
                     <Form.Group controlId="confirmPassword" className="mt-2">
-                        <Form.Label>Confirm New Password</Form.Label>
+                        <Form.Label>
+                            Confirm New Password <span className="text-red-500">*</span>
+                        </Form.Label>
                         <PasswordInput
                             value={confirmPassword}
                             placeholder="Confirm your new password"
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                     </Form.Group>
-                    <Button variant="dark mt-3" type="submit" size="lg" disabled={loading}>
-                        {loading ? <Spinner animation="border" size="sm" /> : 'Change Password'}
-                    </Button>
+                    <div className="flex flex-row justify-end">
+                        <Button variant="dark mt-3" type="submit" size="lg" disabled={loading}>
+                            {loading ? <Spinner animation="border" size="sm" /> : 'Change Password'}
+                        </Button>
+                    </div>
                 </Form>
             </Card.Body>
         </Card>

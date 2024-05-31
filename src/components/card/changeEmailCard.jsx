@@ -3,7 +3,7 @@ import { Card } from 'react-bootstrap';
 import { auth } from '../../../firebase';
 import { EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail, signOut } from 'firebase/auth';
 import { Form, Button, Spinner } from 'react-bootstrap';
-import PasswordInput from '../input/passwordInput';
+import PasswordInput from '../input/PasswordInput';
 
 export default function ChangeEmailCard() {
     const [loading, setLoading] = useState(false);
@@ -46,23 +46,29 @@ export default function ChangeEmailCard() {
     };
 
     return (
-        <Card style={{ maxWidth: '800px' }} className="rounded-5 p-2 my-2">
+        <Card style={{ maxWidth: '700px' }} className="w-full rounded-5 p-2 my-2">
             <Card.Body>
                 <h2 className="text-2xl font-bold">Change Email</h2>
-                <p>After you successfully changed your email, you would be immediately sign out to verify your new email</p>
+                <p>After changing your email successfully, you will be signed out immediately to verify your new email address.</p>
                 <hr className="my-2" />
                 <Form onSubmit={handleChangeEmail}>
                     <Form.Group controlId="email" className="mt-2">
-                        <Form.Label>Email: </Form.Label>
+                        <Form.Label>
+                            Email: <span className="text-red-500">*Please use Gmail as your email provider.</span>
+                        </Form.Label>
                         <Form.Control size="lg" value={email} placeholder="Enter a new email" onChange={(e) => setEmail(e.target.value)} required />
                     </Form.Group>
                     <Form.Group controlId="currentPassword" className="mt-2">
-                        <Form.Label>Current Password</Form.Label>
+                        <Form.Label>
+                            Current Password <span className="text-red-500">*</span>
+                        </Form.Label>
                         <PasswordInput value={password} placeholder="Enter your password" onChange={(e) => setPassword(e.target.value)} />
                     </Form.Group>
-                    <Button variant="dark mt-3" type="submit" size="lg" disabled={loading}>
-                        {loading ? <Spinner animation="border" size="sm" /> : 'Change Email'}
-                    </Button>
+                    <div className="flex flex-row justify-end">
+                        <Button variant="dark mt-3" type="submit" size="lg" disabled={loading}>
+                            {loading ? <Spinner animation="border" size="sm" /> : 'Change Email'}
+                        </Button>
+                    </div>
                 </Form>
             </Card.Body>
         </Card>

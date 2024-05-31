@@ -45,7 +45,7 @@ export const fillData = [
         id: 7,
         bin: 'bin_2',
         time_stamp: '2024-05-17T08:30:00Z',
-        percentage: 120.0,
+        percentage: 100.0,
         bin_type: 'wet',
     },
     {
