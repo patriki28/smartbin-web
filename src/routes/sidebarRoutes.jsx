@@ -1,4 +1,4 @@
-import { FaHome, FaChartBar, FaCog } from 'react-icons/fa';
+import { FaHome, FaChartBar, FaCog, FaUser } from 'react-icons/fa';
 
 export const sidebarRoutes = [
     {
@@ -10,6 +10,11 @@ export const sidebarRoutes = [
         path: '/home/reports-analytics',
         icon: <FaChartBar size={25} />,
         label: 'Reports',
+    },
+    {
+        path: '/home/user-management',
+        icon: <FaUser size={25} />,
+        label: 'Users',
     },
     {
         path: '/home/account-settings',

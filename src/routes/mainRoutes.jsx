@@ -2,9 +2,9 @@ import ProtectedRoutes from '../components/ProtectedRoutes';
 import LoginPage from '../pages/auth/loginPage/loginPage';
 import DashboardPage from '../pages/home/dashboardPage/dashboardPage';
 import ReportAnalyticsPage from '../pages/home/reportAnalyticsPage/reportAnalyticsPage';
+import UserManagementPage from '../pages/home/userManagementPage/userManagementPage';
 import AccountSettingsPage from '../pages/home/accountSettingsPage/accountSettingsPage';
 import PageNotFoundPage from '../pages/pageNotFoundPage/pageNotFoundPage';
-
 import HomeLayout from '../layouts/homeLayout';
 export const mainRoutes = [
     {
@@ -40,6 +40,14 @@ export const mainRoutes = [
                 element: (
                     <ProtectedRoutes>
                         <ReportAnalyticsPage />
+                    </ProtectedRoutes>
+                ),
+            },
+            {
+                path: 'user-management',
+                element: (
+                    <ProtectedRoutes>
+                        <UserManagementPage />
                     </ProtectedRoutes>
                 ),
             },

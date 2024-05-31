@@ -4,6 +4,10 @@ export const dropdownRoutes = [
         label: 'Dashboard',
     },
     {
+        path: '/home/user-management',
+        label: 'User Management',
+    },
+    {
         path: '/home/account-settings',
         label: 'Settings',
     },

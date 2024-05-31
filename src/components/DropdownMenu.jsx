@@ -20,9 +20,8 @@ export default function DropdownMenu({ dropdownOpen, handleDropdown }) {
     }, []);
 
     const handleLogout = () => {
-        if (window.confirm('Are you sure you want to logout?')) {
-            signOut(auth);
-        }
+        if (!window.confirm('Are you sure you want to logout?')) return;
+        signOut(auth);
     };
 
     return (
@@ -47,7 +46,11 @@ export default function DropdownMenu({ dropdownOpen, handleDropdown }) {
                 <ul className="py-1" role="none">
                     {dropdownRoutes.map((route, index) => (
                         <li key={index}>
-                            <Link to={route.path} className="block px-4 py-2 text-sm text-gray-700 hover:bg-black hover:text-white" role="menuitem">
+                            <Link
+                                to={route.path}
+                                className="block border-b-2 px-4 py-2 text-sm text-gray-700 hover:bg-black hover:text-white"
+                                role="menuitem"
+                            >
                                 {route.label}
                             </Link>
                         </li>

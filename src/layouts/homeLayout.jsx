@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
+import { IoMdClose } from 'react-icons/io';
 import Logo from '../assets/logo/logo.png';
 import Sidebar from '../components/Sidebar';
 import DropdownMenu from '../components/DropdownMenu';
-import { IoMdClose } from 'react-icons/io';
 import NotificationMenu from '../components/NotificationMenu';
 
 export default function HomeLayout() {
@@ -40,7 +40,7 @@ export default function HomeLayout() {
 
             <Sidebar navOpen={navOpen} />
 
-            <div className="p-4 mt-14 sm:ml-64">
+            <div className="px-4 py-[40px] mt-14 sm:ml-64">
                 <Outlet />
             </div>
         </div>
