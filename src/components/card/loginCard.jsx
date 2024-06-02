@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Button, Image, Spinner } from 'react-bootstrap';
-import { sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../../firebase';
+import { sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { auth, db } from '../../../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import PasswordInput from '../input/passwordInput';
 import Logo from '../../assets/logo/logo.png';
 
@@ -23,22 +24,50 @@ export default function LoginCard() {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            if (user.emailVerified) {
-                alert('You have successfully logged in!');
-            } else {
-                sendEmailVerification(email);
-                alert('Please verify your email to login.');
+            if (!user.emailVerified) {
+                await sendEmailVerification(user);
+                alert('Please verify your email to login. A verification email has been sent.');
+                setLoading(false);
+                signOut(auth);
+                return;
             }
 
-            navigate('/home/dashboard');
+            const userDocRef = doc(db, 'users', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            if (!userDocSnap.exists()) {
+                alert('No such user found in Firestore.');
+                setLoading(false);
+                signOut(auth);
+                return;
+            }
+
+            const userData = userDocSnap.data();
+            if (userData.role === 'admin') {
+                alert('You have successfully logged in as an admin!');
+                navigate('/home/dashboard');
+            } else {
+                alert('You do not have admin privileges.');
+                setLoading(false);
+                signOut(auth);
+                return;
+            }
         } catch (error) {
             console.log(error);
             let errorMessage = 'An error occurred during login.';
 
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = 'User not found. Please check your email address.';
-            } else if (error.code === 'auth/invalid-credential') {
-                errorMessage = 'Invalid credentials provided. Please check your email and password.';
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = 'User not found. Please check your email address.';
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Incorrect password. Please check your email and password.';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = 'Too many requests. Please try again later.';
+                    break;
+                default:
+                    errorMessage = 'Invalid credentials provided. Please check your email and password.';
             }
 
             alert(errorMessage);
@@ -81,7 +110,9 @@ export default function LoginCard() {
                 <hr />
                 <Form className="mt-2">
                     <Form.Group controlId="formBasicEmail" className="mb-2">
-                        <Form.Label>Email address</Form.Label>
+                        <Form.Label>
+                            Email address: <span className="text-red-500">*</span>
+                        </Form.Label>
                         <Form.Control
                             type="email"
                             placeholder="Enter Email"
@@ -93,7 +124,9 @@ export default function LoginCard() {
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>
+                            Password: <span className="text-red-500">*</span>
+                        </Form.Label>
                         <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
                     </Form.Group>
                     <div className="d-flex justify-content-end">

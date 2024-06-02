@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 export default function useFetchData(collectionName) {
@@ -16,13 +16,16 @@ export default function useFetchData(collectionName) {
             }
 
             try {
-                const querySnapshot = await getDocs(collection(db, collectionName));
-                const documents = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setData(documents);
-                setLoading(false);
+                const unsubscribe = onSnapshot(collection(db, collectionName), (querySnapshot) => {
+                    const documents = querySnapshot.docs.map((doc) => ({
+                        id: doc.id,
+                        ...doc.data(),
+                    }));
+                    setData(documents);
+                    setLoading(false);
+                });
+
+                return () => unsubscribe();
             } catch (err) {
                 setError(err);
                 setLoading(false);
