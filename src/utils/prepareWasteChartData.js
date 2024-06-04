@@ -1,6 +1,6 @@
 export function prepareWasteChartData(filteredData, values, total) {
     const wasteTypeCounts = values.reduce((acc, type) => {
-        acc[type] = filteredData.filter((item) => item.type === type).length;
+        acc[type] = filteredData.filter((item) => item.bin_type === type).length;
         return acc;
     }, {});
 
