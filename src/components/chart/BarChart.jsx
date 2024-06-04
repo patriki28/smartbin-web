@@ -1,19 +1,22 @@
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import { useState } from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Card } from 'react-bootstrap';
-import { sortDate } from '../../utils/sortDate';
-import { prepareWasteChartData } from '../../utils/prepareWasteChartData';
+import { Bar } from 'react-chartjs-2';
 import { chartPercentageOptions } from '../../utils/chartPercentageOption';
+import { prepareWasteChartData } from '../../utils/prepareWasteChartData';
+import { sortDate } from '../../utils/sortDate';
 import Select from '../select/Select';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export default function BarChart({ title, data, filterBy, values }) {
+export default function BarChart({ title, data, filterBy, values, filterBin }) {
+    const [selectedBin, setSelectedBin] = useState('All');
     const [selectedValue, setSelectedValue] = useState('All');
     const sortedData = sortDate(data);
 
-    const filteredData = selectedValue === 'All' ? sortedData : sortedData.filter((item) => item.type === selectedValue);
+    const filteredData = sortedData
+        .filter((item) => selectedBin === 'All' || item.bin === selectedBin)
+        .filter((item) => selectedValue === 'All' || item.bin_type === selectedValue);
 
     const chartData = prepareWasteChartData(filteredData, values, sortedData.length);
 
@@ -24,6 +27,13 @@ export default function BarChart({ title, data, filterBy, values }) {
                     <h2 className="text-2xl font-bold">{title || 'Bar Chart'}</h2>
 
                     <div className="flex flex-wrap items-center gap-2">
+                        <Select
+                            label={`Select bin`}
+                            id="filter-value"
+                            value={selectedBin}
+                            options={[{ label: `All bins`, value: 'All' }, ...filterBin.map((value) => ({ label: value, value }))]}
+                            onChange={setSelectedBin}
+                        />
                         <Select
                             label={`Select ${filterBy}`}
                             id="filter-value"

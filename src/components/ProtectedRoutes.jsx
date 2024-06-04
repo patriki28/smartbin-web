@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 
 const ProtectedRoutes = ({ children }) => {
@@ -10,13 +10,8 @@ const ProtectedRoutes = ({ children }) => {
     useEffect(() => {
         const listen = onAuthStateChanged(auth, (user) => {
             if (user) {
-                if (user.emailVerified) {
-                    setAuthUser(user);
-                    navigate('/home/dashboard');
-                } else {
-                    alert('Verify your email first');
-                    navigate('/');
-                }
+                setAuthUser(user);
+                navigate('/home/dashboard');
             } else {
                 setAuthUser(null);
                 navigate('/');
