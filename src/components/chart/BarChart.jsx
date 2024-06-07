@@ -15,7 +15,7 @@ export default function BarChart({ title, data, filterBy, values, filterBin }) {
     const sortedData = sortDate(data);
 
     const filteredData = sortedData
-        .filter((item) => selectedBin === 'All' || item.bin === selectedBin)
+        .filter((item) => selectedBin === 'All' || item.bin_id === selectedBin)
         .filter((item) => selectedValue === 'All' || item.bin_type === selectedValue);
 
     const chartData = prepareWasteChartData(filteredData, values, sortedData.length);

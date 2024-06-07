@@ -17,7 +17,7 @@ export default function AddBinModal({ show, handleClose }) {
         try {
             await setDoc(doc(db, 'bins', binName), { isActive: false, userId: '' });
             alert('You have succesfully added a bin');
-            handleClose();
+            setBinName('');
         } catch (error) {
             console.log(error);
             alert(error);

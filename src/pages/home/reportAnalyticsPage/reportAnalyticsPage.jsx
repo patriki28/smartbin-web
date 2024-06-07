@@ -1,12 +1,12 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Loader from '../../../components/Loader';
 import useFetchData from '../../../hooks/useFetchData';
 import { fillColumnsData } from '../../../mocks/fillColumnsData';
 import { wasteTypeData } from '../../../mocks/wasteTypeData';
 import { filterDataBySearchQuery } from '../../../utils/filterDataBySearchQuery';
-
 export default function ReportAnalyticsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedBin, setSelectedBin] = useState('All');
@@ -18,6 +18,17 @@ export default function ReportAnalyticsPage() {
 
     if (fillLevelsError) return <div>{fillLevelsError}</div>;
     if (binsError) return <div>{binsError}</div>;
+
+    if (binsData.length === 0) {
+        return (
+            <div className="text-center text-gray-500 text-xl">
+                No registered bins available. Please add a bin from the dashboard. <br />
+                <Link to="/home/dashboard" className="text-blue-600">
+                    Go to dashboard
+                </Link>
+            </div>
+        );
+    }
 
     const binIds = binsData.map((bin) => bin.id);
     const filteredDataByBins = fillLevelsData
@@ -43,7 +54,7 @@ export default function ReportAnalyticsPage() {
                     <Form.Control
                         size="lg"
                         as="select"
-                        className="w-fit px-4 "
+                        className="w-fit px-4"
                         value={selectedBin}
                         onChange={(event) => setSelectedBin(event.target.value)}
                     >
@@ -60,11 +71,11 @@ export default function ReportAnalyticsPage() {
                     <Form.Control
                         size="lg"
                         as="select"
-                        className="w-fit px-4 "
+                        className="w-fit px-4"
                         value={selectedWasteType}
                         onChange={(event) => setSelectedWasteType(event.target.value)}
                     >
-                        <option value="All">All Type</option>
+                        <option value="All">All Types</option>
                         {wasteTypeData.map((waste) => (
                             <option key={waste} value={waste}>
                                 {waste}

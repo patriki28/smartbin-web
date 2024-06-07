@@ -12,9 +12,6 @@ export default function UserManagementPage() {
     const [showModal, setShowModal] = useState(false);
     const { data, loading, error } = useFetchData('users');
 
-    const handleClose = () => setShowModal(false);
-    const handleShow = () => setShowModal(true);
-
     if (loading) return <Loader />;
     if (error) return <div>{error}</div>;
 
@@ -25,7 +22,7 @@ export default function UserManagementPage() {
         <div>
             <div className="flex flex-col justify-center items-center sm:justify-between sm:flex-row gap-3 mb-3">
                 <h1 className="text-3xl font-bold">User Management</h1>
-                <Button size="lg" variant="dark" onClick={handleShow}>
+                <Button size="lg" variant="dark" onClick={() => setShowModal(true)}>
                     Add user
                 </Button>
             </div>
@@ -48,7 +45,7 @@ export default function UserManagementPage() {
                 pageSizeOptions={[10, 20, 30, 40, 50]}
                 autoHeight
             />
-            <AddUserModal show={showModal} handleClose={handleClose} />
+            <AddUserModal show={showModal} handleClose={() => setShowModal(false)} />
         </div>
     );
 }
