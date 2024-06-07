@@ -1,8 +1,8 @@
+import { EmailAuthProvider, reauthenticateWithCredential, signOut, verifyBeforeUpdateEmail } from 'firebase/auth';
 import { useState } from 'react';
-import { Card } from 'react-bootstrap';
+import { Button, Card, Form, Spinner } from 'react-bootstrap';
 import { auth } from '../../../firebase';
-import { EmailAuthProvider, reauthenticateWithCredential, verifyBeforeUpdateEmail, signOut } from 'firebase/auth';
-import { Form, Button, Spinner } from 'react-bootstrap';
+import { isEmail, isGmail } from '../../utils/validation';
 import PasswordInput from '../input/passwordInput';
 
 export default function ChangeEmailCard() {
@@ -14,6 +14,9 @@ export default function ChangeEmailCard() {
         e.preventDefault();
 
         if (loading) return;
+
+        if (!isEmail(email)) return alert('Please enter a valid email!');
+        if (!isGmail(email)) return alert('Please enter a gmail account');
 
         setLoading(true);
 

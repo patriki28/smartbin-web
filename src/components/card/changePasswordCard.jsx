@@ -1,8 +1,8 @@
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { useState } from 'react';
-import { Card } from 'react-bootstrap';
+import { Button, Card, Form, Spinner } from 'react-bootstrap';
 import { auth } from '../../../firebase';
-import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import { Form, Button, Spinner } from 'react-bootstrap';
+import { isStrongPassword } from '../../utils/validation';
 import PasswordInput from '../input/passwordInput';
 
 export default function ChangePasswordCard() {
@@ -19,6 +19,7 @@ export default function ChangePasswordCard() {
         setLoading(true);
 
         if (!currentPassword || !newPassword || !confirmPassword) return alert('All fields are required!');
+        if (!isStrongPassword(newPassword)) return alert('Enter a strong password');
         if (newPassword !== confirmPassword) return alert('New password and confirmation password do not match.');
 
         try {
