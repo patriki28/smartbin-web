@@ -58,9 +58,9 @@ export default function RegisteredBins({ binsData }) {
                                     >
                                         <span className="flex-1 ms-3 whitespace-nowrap">{bin.id}</span>
                                         <span
-                                            className={`inline-flex items-center justify-center px-2 py-0.5 ms-3 text-md font-medium text-white ${bin.isActive ? 'bg-lime-700' : 'bg-red-500'} rounded`}
+                                            className={`inline-flex items-center justify-center px-2 py-0.5 ms-3 text-md font-medium text-white ${bin.userIds.length !== 0 ? 'bg-lime-700' : 'bg-red-500'} rounded`}
                                         >
-                                            {bin.isActive ? 'Active' : 'Inactive'}
+                                            {bin.userIds.length !== 0 ? 'Active' : 'Inactive'}
                                         </span>
                                         <FaRegTrashAlt className="ml-2 cursor-pointer" size={20} onClick={() => handleDelete(bin.id)} />
                                     </a>

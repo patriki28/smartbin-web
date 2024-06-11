@@ -40,7 +40,7 @@ export default function AddUserModal({ show, handleClose }) {
         }
 
         try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), `${lastName}-${firstName}`);
+            const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), `${lastName.toLowerCase()}-${firstName.toLowerCase()}`);
 
             await setDoc(doc(db, 'users', userCredential.user.uid), {
                 firstName: firstName.trim(),
