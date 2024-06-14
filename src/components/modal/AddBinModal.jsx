@@ -1,4 +1,4 @@
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { Button, Form, Modal, Spinner } from 'react-bootstrap';
 import { db } from '../../../firebase';
@@ -15,9 +15,17 @@ export default function AddBinModal({ show, handleClose }) {
         setLoading(true);
 
         try {
-            await setDoc(doc(db, 'bins', binName), { isActive: false, userId: '' });
-            alert('You have succesfully added a bin');
-            setBinName('');
+            const binDocRef = doc(db, 'bins', binName);
+            const binDocSnap = await getDoc(binDocRef);
+
+            if (binDocSnap.exists()) {
+                alert('Bin name already exists. Please choose a different name.');
+                setBinName('');
+            } else {
+                await setDoc(binDocRef, { userIds: [] });
+                alert('You have successfully added a bin');
+                setBinName('');
+            }
         } catch (error) {
             console.log(error);
             alert(error);
@@ -25,6 +33,7 @@ export default function AddBinModal({ show, handleClose }) {
             setLoading(false);
         }
     };
+
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>

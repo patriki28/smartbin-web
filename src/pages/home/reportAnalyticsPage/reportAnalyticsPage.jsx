@@ -1,47 +1,101 @@
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
-import { Form } from 'react-bootstrap';
+import axios from 'axios';
+import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { auth, db } from '../../../../firebase';
 import Loader from '../../../components/Loader';
 import useFetchData from '../../../hooks/useFetchData';
+import useTimeCheck from '../../../hooks/useTimeCheck';
 import { fillColumnsData } from '../../../mocks/fillColumnsData';
 import { wasteTypeData } from '../../../mocks/wasteTypeData';
 import { filterDataBySearchQuery } from '../../../utils/filterDataBySearchQuery';
-export default function ReportAnalyticsPage() {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedBin, setSelectedBin] = useState('All');
-    const [selectedWasteType, setSelectedWasteType] = useState('All');
-    const { data: fillLevelsData, loading: fillLevelsLoading, error: fillLevelsError } = useFetchData('fill-levels');
-    const { data: binsData, loading: binsLoading, error: binsError } = useFetchData('bins');
+import filteredAnalyzeFillData from '../../../utils/filteredAnalyzeFillData';
+import filteredAnalyzeWasteData from '../../../utils/filteredAnalyzeWasteData';
+import { sortDate } from '../../../utils/sortDate';
+import NoRegisterPage from '../noRegisterBinPage/noRegisterPage';
 
-    if (fillLevelsLoading || binsLoading) return <Loader />;
+export default function ReportAnalyticsPage() {
+    const [userId, setUserId] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedBin, setSelectedBin] = useState('');
+    const [selectedWasteType, setSelectedWasteType] = useState('All');
+    const { data: fillLevelsData, loading: fillLevelsLoading, error: fillLevelsError } = useFetchData('fill_level_data');
+    const { data: wasteData, loading: wasteLoading, error: wasteError } = useFetchData('waste_data');
+    const { data: binsData, loading: binsLoading, error: binsError } = useFetchData('bins');
+    const isButtonDisabled = useTimeCheck();
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setUserId(user.uid);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+        if (binsData && binsData.length > 0) {
+            setSelectedBin(binsData[0].id);
+        }
+    }, [binsData]);
+
+    if (fillLevelsLoading || wasteLoading || binsLoading || !userId) return <Loader />;
 
     if (fillLevelsError) return <div>{fillLevelsError}</div>;
+    if (wasteError) return <div>{wasteError}</div>;
     if (binsError) return <div>{binsError}</div>;
 
-    if (binsData.length === 0) {
-        return (
-            <div className="text-center text-gray-500 text-xl">
-                No registered bins available. Please add a bin from the dashboard. <br />
-                <Link to="/home/dashboard" className="text-blue-600">
-                    Go to dashboard
-                </Link>
-            </div>
-        );
-    }
+    if (binsData.length === 0) return <NoRegisterPage />;
 
     const binIds = binsData.map((bin) => bin.id);
-    const filteredDataByBins = fillLevelsData
-        .filter((item) => selectedBin === 'All' || item.bin === selectedBin)
+    const filteredDataByBins = sortDate(fillLevelsData)
+        .filter((item) => item.bin === selectedBin)
         .filter((item) => selectedWasteType === 'All' || item.bin_type === selectedWasteType);
 
-    const filteredData = filterDataBySearchQuery(filteredDataByBins, searchQuery);
+    const filteredWasteDataByBins = sortDate(wasteData)
+        .filter((item) => item.bin_id === selectedBin)
+        .filter((item) => selectedWasteType === 'All' || item.type === selectedWasteType);
+
+    const fill = filterDataBySearchQuery(filteredDataByBins, searchQuery);
+    const waste = filterDataBySearchQuery(filteredWasteDataByBins, searchQuery);
+
+    const handleAnalyzeData = async () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        const fillData = filteredAnalyzeFillData(fill);
+        const wasteData = filteredAnalyzeWasteData(waste);
+
+        try {
+            await setDoc(doc(db, 'users', userId), { lastRequestTime: new Date() }, { merge: true });
+
+            const response = await axios.post(import.meta.env.VITE_ANALYZE_DATA_API_URL, {
+                waste_data: JSON.stringify(wasteData),
+                fill_level_data: JSON.stringify(fillData),
+                api_key: import.meta.env.VITE_ANALYZE_API_KEY,
+                open_ai_api_key: import.meta.env.VITE_OPEN_AI_API_KEY,
+            });
+
+            await addDoc(collection(db, 'reports'), { bin_id: 'smart_bin_001', report_text: response.data.message, timestamp: serverTimestamp() });
+
+            alert('Analyzed data successfully');
+        } catch (error) {
+            console.error('Error storing timestamp: ', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div>
             <h1 className="w-full text-3xl font-bold mb-3">Smart Bin Reports</h1>
 
-            <div className="flex flex-row items-end justify-center gap-2 mb-3">
+            <div className="flex flex-col items-center justify-center gap-2 mb-3 sm:flex-row sm:items-end">
                 <Form.Control
                     size="lg"
                     type="text"
@@ -58,12 +112,15 @@ export default function ReportAnalyticsPage() {
                         value={selectedBin}
                         onChange={(event) => setSelectedBin(event.target.value)}
                     >
-                        <option value="All">All Bins</option>
-                        {binIds.map((binId) => (
-                            <option key={binId} value={binId}>
-                                {binId}
-                            </option>
-                        ))}
+                        {binIds.length === 0 ? (
+                            <option disabled>No bins available</option>
+                        ) : (
+                            binIds.map((binId) => (
+                                <option key={binId} value={binId}>
+                                    {binId}
+                                </option>
+                            ))
+                        )}
                     </Form.Control>
                 </div>
                 <div>
@@ -83,9 +140,15 @@ export default function ReportAnalyticsPage() {
                         ))}
                     </Form.Control>
                 </div>
+                <Button variant="dark" size="lg" onClick={handleAnalyzeData} disabled={loading || isButtonDisabled}>
+                    {loading ? <Spinner animation="border" size={20} /> : 'Analyze'}
+                </Button>
+                <Link to={`/home/reports-analytics/${selectedBin}`} className="btn btn-lg py-2 btn-dark ">
+                    View
+                </Link>
             </div>
             <DataGrid
-                rows={filteredData}
+                rows={fill}
                 columns={fillColumnsData}
                 initialState={{
                     pagination: {

@@ -1,5 +1,5 @@
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { Bar } from 'react-chartjs-2';
 import { chartPercentageOptions } from '../../utils/chartPercentageOption';
@@ -14,9 +14,15 @@ export default function BarChart({ title, data, filterBy, values, filterBin }) {
     const [selectedValue, setSelectedValue] = useState('All');
     const sortedData = sortDate(data);
 
+    useEffect(() => {
+        if (filterBin && filterBin.length > 0) {
+            setSelectedBin(filterBin[0]);
+        }
+    }, [filterBin]);
+
     const filteredData = sortedData
-        .filter((item) => selectedBin === 'All' || item.bin_id === selectedBin)
-        .filter((item) => selectedValue === 'All' || item.bin_type === selectedValue);
+        .filter((item) => item.bin_id === selectedBin)
+        .filter((item) => selectedValue === 'All' || item.type === selectedValue);
 
     const chartData = prepareWasteChartData(filteredData, values, sortedData.length);
 
@@ -31,7 +37,7 @@ export default function BarChart({ title, data, filterBy, values, filterBin }) {
                             label={`Select bin`}
                             id="filter-value"
                             value={selectedBin}
-                            options={[{ label: `All bins`, value: 'All' }, ...filterBin.map((value) => ({ label: value, value }))]}
+                            options={filterBin.map((value) => ({ label: value, value }))}
                             onChange={setSelectedBin}
                         />
                         <Select
