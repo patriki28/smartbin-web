@@ -4,6 +4,14 @@ export const dropdownRoutes = [
         label: 'Dashboard',
     },
     {
+        path: '/home/registered-bins',
+        label: 'Registered Bins',
+    },
+    {
+        path: '/home/reports-analytics',
+        label: 'Reports',
+    },
+    {
         path: '/home/user-management',
         label: 'User Management',
     },

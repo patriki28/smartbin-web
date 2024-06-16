@@ -1,12 +1,11 @@
+import { CategoryScale, Chart as ChartJS, Legend, LineElement, LinearScale, PointElement, Title, Tooltip } from 'chart.js';
 import { useState } from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Card } from 'react-bootstrap';
-import { sortDate } from '../../utils/sortDate';
-import { prepareFillChartData } from '../../utils/prepareFillChartData';
-import filterTimePeriod from '../../utils/filterTimePeriod';
-import Select from '../select/Select';
+import { Line } from 'react-chartjs-2';
 import { timePeriodData } from '../../mocks/timePeriodData';
+import { prepareFillChartData } from '../../utils/prepareFillChartData';
+import { sortDate } from '../../utils/sortDate';
+import Select from '../select/Select';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -14,8 +13,7 @@ export default function LineChart({ title, data, filterBy, values, valueKey }) {
     const [selectedValue, setSelectedValue] = useState('All');
     const [timePeriod, setTimePeriod] = useState('daily');
 
-    const filteredData = filterTimePeriod(data);
-    const sortedData = sortDate(filteredData);
+    const sortedData = sortDate(data);
     const chartData = prepareFillChartData(sortedData, filterBy, values, valueKey, timePeriod, selectedValue);
 
     const chartOptions = {

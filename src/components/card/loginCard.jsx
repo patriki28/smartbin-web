@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, Form, Button, Image, Spinner } from 'react-bootstrap';
 import { sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth, db } from '../../../firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import PasswordInput from '../input/passwordInput';
+import { useState } from 'react';
+import { Button, Card, Form, Image, Spinner } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../../../firebase';
 import Logo from '../../assets/logo/logo.png';
+import PasswordInput from '../input/passwordInput';
 
 export default function LoginCard() {
     const navigate = useNavigate();

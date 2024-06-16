@@ -1,13 +1,11 @@
-import formatDate from './formatDate';
-
 export default function formatTimePeriodLabel(date, timePeriod) {
     if (timePeriod === 'daily') {
-        return formatDate(date);
+        return date.toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' });
     } else if (timePeriod === 'weekly') {
         const weekNumber = Math.ceil(date.getDate() / 7);
         return `${date.toLocaleString('default', { month: 'short' })} Week ${weekNumber}`;
     } else if (timePeriod === 'monthly') {
-        return date.toLocaleString('default', { month: 'long' });
+        return date.toLocaleString('default', { month: 'long', year: 'numeric' });
     }
-    return formatDate(date);
+    return date.toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' });
 }

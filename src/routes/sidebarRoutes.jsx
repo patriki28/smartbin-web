@@ -1,10 +1,15 @@
-import { FaHome, FaChartBar, FaCog, FaUser } from 'react-icons/fa';
+import { FaChartBar, FaCog, FaHome, FaRegTrashAlt, FaUser } from 'react-icons/fa';
 
 export const sidebarRoutes = [
     {
         path: '/home/dashboard',
         icon: <FaHome size={25} />,
         label: 'Dashboard',
+    },
+    {
+        path: '/home/registered-bins',
+        icon: <FaRegTrashAlt size={25} />,
+        label: 'Bins',
     },
     {
         path: '/home/reports-analytics',

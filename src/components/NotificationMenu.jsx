@@ -1,8 +1,8 @@
-import { FaBell } from 'react-icons/fa';
-import { sortDate } from '../utils/sortDate';
 import { Spinner } from 'react-bootstrap';
+import { FaBell } from 'react-icons/fa';
 import useFetchData from '../hooks/useFetchData';
 import formatDate from '../utils/formatDate';
+import { sortDate } from '../utils/sortDate';
 
 export default function NotificationMenu({ notificationOpen, handleNotification }) {
     const { data, loading, error } = useFetchData('notifications');
@@ -30,13 +30,13 @@ export default function NotificationMenu({ notificationOpen, handleNotification 
                 ) : (
                     <ul className="py-1" role="none">
                         {sortDate(data)
-                            .slice(0, 4)
                             .reverse()
+                            .slice(0, 5)
                             .map((notification, index) => (
                                 <li key={index}>
                                     <div className="block px-4 py-2 text-sm text-gray-700 hover:bg-black hover:text-white" role="menuitem">
                                         <h1 className="text-lg font-semibold">{notification.title}</h1>
-                                        <p>{formatDate(notification.time_stamp)}</p>
+                                        <p>{formatDate(notification.timestamp)}</p>
                                     </div>
                                 </li>
                             ))}

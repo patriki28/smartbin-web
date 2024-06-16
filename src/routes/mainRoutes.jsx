@@ -1,11 +1,14 @@
 import ProtectedRoutes from '../components/ProtectedRoutes';
+import HomeLayout from '../layouts/homeLayout';
 import LoginPage from '../pages/auth/loginPage/loginPage';
+import AccountSettingsPage from '../pages/home/accountSettingsPage/accountSettingsPage';
 import DashboardPage from '../pages/home/dashboardPage/dashboardPage';
+import RegisteredBinsPage from '../pages/home/registeredBinsPage/registeredBinsPage';
 import ReportAnalyticsPage from '../pages/home/reportAnalyticsPage/reportAnalyticsPage';
 import UserManagementPage from '../pages/home/userManagementPage/userManagementPage';
-import AccountSettingsPage from '../pages/home/accountSettingsPage/accountSettingsPage';
+import ViewAnalyzeReportsPage from '../pages/home/viewAnalyzedReportsPage/viewAnalyzeReportsPage';
+import ViewUserMonitoredBinsPage from '../pages/home/viewUserMonitoredBinsPage/viewUserMonitoredBinsPage';
 import PageNotFoundPage from '../pages/pageNotFoundPage/pageNotFoundPage';
-import HomeLayout from '../layouts/homeLayout';
 export const mainRoutes = [
     {
         path: '*',
@@ -36,10 +39,34 @@ export const mainRoutes = [
                 ),
             },
             {
+                path: 'registered-bins',
+                element: (
+                    <ProtectedRoutes>
+                        <RegisteredBinsPage />
+                    </ProtectedRoutes>
+                ),
+            },
+            {
                 path: 'reports-analytics',
                 element: (
                     <ProtectedRoutes>
                         <ReportAnalyticsPage />
+                    </ProtectedRoutes>
+                ),
+            },
+            {
+                path: 'reports-analytics/:id',
+                element: (
+                    <ProtectedRoutes>
+                        <ViewAnalyzeReportsPage />
+                    </ProtectedRoutes>
+                ),
+            },
+            {
+                path: 'user-monitored-bins/:id',
+                element: (
+                    <ProtectedRoutes>
+                        <ViewUserMonitoredBinsPage />
                     </ProtectedRoutes>
                 ),
             },
