@@ -1,4 +1,8 @@
 export default function formatTimePeriodLabel(date, timePeriod) {
+    if (!(date instanceof Date)) {
+        console.error('Invalid date:', date);
+        return '';
+    }
     if (timePeriod === 'daily') {
         return date.toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' });
     } else if (timePeriod === 'weekly') {

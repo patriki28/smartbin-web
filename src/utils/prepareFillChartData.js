@@ -1,8 +1,22 @@
 import formatTimePeriodLabel from './formatTimePeriodLabel';
 
 export const prepareFillChartData = (data, filterBy, values, valueKey, timePeriod, selectedValue) => {
-    // Step 1: Extract unique time period labels (dates in your case)
-    const labels = [...new Set(data.map((item) => formatTimePeriodLabel(item.timestamp.toDate(), timePeriod)))];
+    const labels = [
+        ...new Set(
+            data.map((item) => {
+                if (!item.timestamp) {
+                    console.error('Missing timestamp for item:', item);
+                    return '';
+                }
+                try {
+                    return formatTimePeriodLabel(item.timestamp.toDate(), timePeriod);
+                } catch (error) {
+                    console.error('Error formatting timestamp for item:', item, error);
+                    return '';
+                }
+            })
+        ),
+    ].filter((label) => label !== '');
 
     const uniqueLabels = filterUniqueDays(labels);
 
@@ -10,11 +24,19 @@ export const prepareFillChartData = (data, filterBy, values, valueKey, timePerio
         const valueData = data.filter((item) => item[filterBy] === value);
 
         const groupedData = valueData.reduce((acc, item) => {
-            const dateLabel = formatTimePeriodLabel(item.timestamp.toDate(), timePeriod);
-            if (!acc[dateLabel]) {
-                acc[dateLabel] = [];
+            if (!item.timestamp) {
+                console.error('Missing timestamp for item:', item);
+                return acc;
             }
-            acc[dateLabel].push(item);
+            try {
+                const dateLabel = formatTimePeriodLabel(item.timestamp.toDate(), timePeriod);
+                if (!acc[dateLabel]) {
+                    acc[dateLabel] = [];
+                }
+                acc[dateLabel].push(item);
+            } catch (error) {
+                console.error('Error formatting timestamp for item:', item, error);
+            }
             return acc;
         }, {});
 

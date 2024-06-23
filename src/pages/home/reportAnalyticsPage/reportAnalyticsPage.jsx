@@ -22,9 +22,9 @@ export default function ReportAnalyticsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedBin, setSelectedBin] = useState('');
     const [selectedWasteType, setSelectedWasteType] = useState('All');
-    const { data: fillLevelsData, loading: fillLevelsLoading, error: fillLevelsError } = useFetchData('fill_level_data');
-    const { data: wasteData, loading: wasteLoading, error: wasteError } = useFetchData('waste_data');
-    const { data: binsData, loading: binsLoading, error: binsError } = useFetchData('bins');
+    const { data: fillLevelsData, loading: fillLevelsLoading } = useFetchData('fill_level_data');
+    const { data: wasteData, loading: wasteLoading } = useFetchData('waste_data');
+    const { data: binsData, loading: binsLoading } = useFetchData('bins');
     const isButtonDisabled = useTimeCheck();
 
     useEffect(() => {
@@ -45,10 +45,6 @@ export default function ReportAnalyticsPage() {
 
     if (fillLevelsLoading || wasteLoading || binsLoading || !userId) return <Loader />;
 
-    if (fillLevelsError) return <div>{fillLevelsError}</div>;
-    if (wasteError) return <div>{wasteError}</div>;
-    if (binsError) return <div>{binsError}</div>;
-
     if (binsData.length === 0) return <NoRegisterPage />;
 
     const binIds = binsData.map((bin) => bin.id);
@@ -63,20 +59,20 @@ export default function ReportAnalyticsPage() {
     const fill = filterDataBySearchQuery(filteredDataByBins, searchQuery);
     const waste = filterDataBySearchQuery(filteredWasteDataByBins, searchQuery);
 
+    const fillFilterData = filteredAnalyzeFillData(fill);
+    const wasteFilterData = filteredAnalyzeWasteData(waste);
+
     const handleAnalyzeData = async () => {
         if (loading) return;
 
         setLoading(true);
 
-        const fillData = filteredAnalyzeFillData(fill);
-        const wasteData = filteredAnalyzeWasteData(waste);
-
         try {
             await setDoc(doc(db, 'users', userId), { lastRequestTime: new Date() }, { merge: true });
 
             const response = await axios.post(import.meta.env.VITE_ANALYZE_DATA_API_URL, {
-                waste_data: JSON.stringify(wasteData),
-                fill_level_data: JSON.stringify(fillData),
+                waste_data: JSON.stringify(wasteFilterData),
+                fill_level_data: JSON.stringify(fillFilterData),
                 api_key: import.meta.env.VITE_ANALYZE_API_KEY,
                 open_ai_api_key: import.meta.env.VITE_OPEN_AI_API_KEY,
             });

@@ -1,5 +1,6 @@
 import { addDoc, collection, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { db } from '../../firebase';
 
 export default function useNotifications() {
@@ -7,9 +8,12 @@ export default function useNotifications() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        let unsubscribeFillLevel;
+        let unsubscribeNotifications;
+
         const fetchData = async () => {
             try {
-                const unsubscribeFillLevel = onSnapshot(collection(db, 'fill_level_data'), async (querySnapshot) => {
+                unsubscribeFillLevel = onSnapshot(collection(db, 'fill_level_data'), async (querySnapshot) => {
                     for (const doc of querySnapshot.docs) {
                         const { bin, bin_type, timestamp, percentage } = doc.data();
                         const fillLevelDataId = doc.id;
@@ -34,8 +38,6 @@ export default function useNotifications() {
 
                     setLoading(false);
                 });
-
-                return unsubscribeFillLevel;
             } catch (err) {
                 setError(err);
                 setLoading(false);
@@ -44,30 +46,28 @@ export default function useNotifications() {
 
         const fetchNotifications = async () => {
             try {
-                const unsubscribeNotifications = onSnapshot(collection(db, 'notifications'), async (querySnapshot) => {
+                unsubscribeNotifications = onSnapshot(collection(db, 'notifications'), async (querySnapshot) => {
                     for (const doc of querySnapshot.docs) {
                         const { title, isRead } = doc.data();
 
-                        if (isRead === false) {
-                            await alert(title);
+                        if (!isRead) {
                             await updateDoc(doc.ref, { isRead: true });
+                            toast.error(title);
                         }
                     }
                 });
-
-                return unsubscribeNotifications;
             } catch (err) {
                 setError(err);
                 setLoading(false);
             }
         };
 
-        const unsubscribeFetchData = fetchData();
-        const unsubscribeFetchNotifications = fetchNotifications();
+        fetchData();
+        fetchNotifications();
 
         return () => {
-            unsubscribeFetchData?.();
-            unsubscribeFetchNotifications?.();
+            if (unsubscribeFillLevel) unsubscribeFillLevel();
+            if (unsubscribeNotifications) unsubscribeNotifications();
         };
     }, []);
 

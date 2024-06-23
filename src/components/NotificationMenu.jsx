@@ -9,6 +9,8 @@ export default function NotificationMenu({ notificationOpen, handleNotification 
 
     if (error) return <div>{error}</div>;
 
+    const unreadNotif = data.filter((notification) => notification.isRead === false).length;
+
     return (
         <div className="flex items-center ms-3">
             <button
@@ -17,6 +19,7 @@ export default function NotificationMenu({ notificationOpen, handleNotification 
                 className="inline-flex items-center p-2 text-gray-500 rounded-full bg-gray-100 outline-none focus:ring-2 ring-gray-200"
             >
                 <FaBell size={25} />
+                {unreadNotif > 0 && <div className="bg-red-500 text-white px-1 rounded-full">{unreadNotif}</div>}
             </button>
 
             <div
@@ -34,7 +37,10 @@ export default function NotificationMenu({ notificationOpen, handleNotification 
                             .slice(0, 5)
                             .map((notification, index) => (
                                 <li key={index}>
-                                    <div className="block px-4 py-2 text-sm text-gray-700 hover:bg-black hover:text-white" role="menuitem">
+                                    <div
+                                        className={`block px-4 ${notification.isRead && `bg-gray-200`} py-2 text-sm text-gray-700 hover:bg-black hover:text-white`}
+                                        role="menuitem"
+                                    >
                                         <h1 className="text-lg font-semibold">{notification.title}</h1>
                                         <p>{formatDate(notification.timestamp)}</p>
                                     </div>

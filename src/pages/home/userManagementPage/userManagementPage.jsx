@@ -10,10 +10,9 @@ import { filterDataBySearchQuery } from '../../../utils/filterDataBySearchQuery'
 export default function UserManagementPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const { data, loading, error } = useFetchData('users');
+    const { data, loading } = useFetchData('users');
 
     if (loading) return <Loader />;
-    if (error) return <div>{error}</div>;
 
     const userData = data.filter((user) => user.role === 'user');
     const filteredData = filterDataBySearchQuery(userData, searchQuery);

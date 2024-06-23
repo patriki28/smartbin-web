@@ -1,4 +1,5 @@
 import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 import { db } from '../../firebase';
 
 export const handleDeleteBins = async (id) => {
@@ -30,9 +31,9 @@ export const handleDeleteBins = async (id) => {
             deleteDocuments(notificationsSnapshot, 'notifications'),
         ]);
 
-        alert(`Bin with ID ${id} has been deleted`);
+        toast.success(`Bin with ID ${id} has been deleted`);
     } catch (error) {
         console.error(error);
-        alert('Error deleting bin');
+        toast.error('Error deleting bin');
     }
 };

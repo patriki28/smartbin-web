@@ -2,10 +2,13 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
+import useNotifications from '../hooks/useNotifications';
+import Loader from './Loader';
 
-const ProtectedRoutes = ({ children }) => {
+export default function ProtectedRoutes({ children }) {
     const [authUser, setAuthUser] = useState(null);
     const navigate = useNavigate();
+    const { loading } = useNotifications();
 
     useEffect(() => {
         const listen = onAuthStateChanged(auth, (user) => {
@@ -22,7 +25,5 @@ const ProtectedRoutes = ({ children }) => {
         };
     }, [authUser]);
 
-    return <>{children}</>;
-};
-
-export default ProtectedRoutes;
+    return <>{loading ? <Loader /> : children}</>;
+}

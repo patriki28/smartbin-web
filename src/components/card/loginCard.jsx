@@ -3,6 +3,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { Button, Card, Form, Image, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { auth, db } from '../../../firebase';
 import Logo from '../../assets/logo/logo.png';
 import PasswordInput from '../input/passwordInput';
@@ -18,7 +19,7 @@ export default function LoginCard() {
 
         setLoading(true);
 
-        if (!email || !password) return alert('Please fill up all fields!');
+        if (!email || !password) return toast.error('Please fill up all fields!');
 
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -26,7 +27,7 @@ export default function LoginCard() {
 
             if (!user.emailVerified) {
                 await sendEmailVerification(user);
-                alert('Please verify your email to login. A verification email has been sent.');
+                toast.error('Please verify your email to login. A verification email has been sent.');
                 setLoading(false);
                 signOut(auth);
                 return;
@@ -36,7 +37,7 @@ export default function LoginCard() {
             const userDocSnap = await getDoc(userDocRef);
 
             if (!userDocSnap.exists()) {
-                alert('No such user found in Firestore.');
+                toast.error('No such user found in Firestore.');
                 setLoading(false);
                 signOut(auth);
                 return;
@@ -44,10 +45,10 @@ export default function LoginCard() {
 
             const userData = userDocSnap.data();
             if (userData.role === 'admin') {
-                alert('You have successfully logged in as an admin!');
+                toast.success('You have successfully logged in as an admin!');
                 navigate('/home/dashboard');
             } else {
-                alert('You do not have admin privileges.');
+                toast.error('You do not have admin privileges.');
                 setLoading(false);
                 signOut(auth);
                 return;
@@ -70,7 +71,7 @@ export default function LoginCard() {
                     errorMessage = 'Invalid credentials provided. Please check your email and password.';
             }
 
-            alert(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -81,18 +82,18 @@ export default function LoginCard() {
 
         setLoading(true);
 
-        if (!email) return alert('Please enter your email first!');
+        if (!email) return toast.error('Please enter your email first!');
 
         try {
             await sendPasswordResetEmail(auth, email);
 
-            alert('Password reset email sent');
+            toast.success('Password reset email sent');
         } catch (error) {
             console.log(error);
             if (error.code === 'auth/user-not-found') {
-                alert('User not found. Please check your email address.');
+                toast.error('User not found. Please check your email address.');
             } else {
-                alert('Error sending password reset email. Please try again later.');
+                toast.error('Error sending password reset email. Please try again later.');
             }
         } finally {
             setLoading(false);

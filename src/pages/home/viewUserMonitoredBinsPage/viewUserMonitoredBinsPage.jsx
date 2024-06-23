@@ -5,11 +5,10 @@ import PageNotFoundPage from '../../pageNotFoundPage/pageNotFoundPage';
 
 export default function ViewUserMonitoredBinsPage() {
     const { id } = useParams();
-    const { data, loading, error } = useFetchData('bins');
+    const { data, loading } = useFetchData('bins');
 
     if (loading) return <Loader />;
     if (!id) return <PageNotFoundPage />;
-    if (error) return <div>{error}</div>;
 
     const filteredData = data.filter((report) => report.userIds.includes(id));
 
