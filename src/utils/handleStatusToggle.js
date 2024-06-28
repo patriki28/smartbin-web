@@ -1,4 +1,5 @@
 import { doc, updateDoc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 import { db } from '../../firebase';
 
 export async function handleStatusToggle(userId, newStatus) {
@@ -8,7 +9,7 @@ export async function handleStatusToggle(userId, newStatus) {
         await updateDoc(userDocRef, {
             isDisabled: newStatus,
         });
-        alert('User status updated successfully.');
+        toast.success('User status updated successfully.');
     } catch (error) {
         console.error('Error updating user status: ', error);
     }

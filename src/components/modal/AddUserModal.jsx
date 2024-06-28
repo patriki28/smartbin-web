@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailA
 import { Timestamp, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { Button, Form, Modal, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import { auth, db } from '../../../firebase';
 import { decrypt, encrypt } from '../../utils/encryption';
 
@@ -36,7 +37,7 @@ export default function AddUserModal({ show, handleClose }) {
 
         if (!firstName || !lastName || !email) {
             setLoading(false);
-            return alert('Please fill out all fields.');
+            return toast.error('Please fill out all fields.');
         }
 
         try {
@@ -53,11 +54,11 @@ export default function AddUserModal({ show, handleClose }) {
 
             await sendEmailVerification(userCredential.user);
             await signInWithEmailAndPassword(auth, originalUserEmail, decryptedPassword);
-            alert('You have successfully added a user');
+            toast.success('You have successfully added a user');
             handleClose();
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }
@@ -78,6 +79,7 @@ export default function AddUserModal({ show, handleClose }) {
                             placeholder="Enter first name"
                             value={firstName}
                             name="firstName"
+                            maxLength={20}
                             onChange={(e) => setFirstName(e.target.value)}
                         />
                     </Form.Group>
@@ -89,6 +91,7 @@ export default function AddUserModal({ show, handleClose }) {
                             placeholder="Enter middle name"
                             value={middleName}
                             name="middleName"
+                            maxLength={20}
                             onChange={(e) => setMiddleName(e.target.value)}
                         />
                     </Form.Group>
@@ -100,6 +103,7 @@ export default function AddUserModal({ show, handleClose }) {
                             placeholder="Enter last name"
                             value={lastName}
                             name="lastName"
+                            maxLength={20}
                             onChange={(e) => setLastName(e.target.value)}
                         />
                     </Form.Group>
@@ -111,6 +115,7 @@ export default function AddUserModal({ show, handleClose }) {
                             placeholder="Enter email"
                             value={email}
                             name="email"
+                            maxLength={20}
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </Form.Group>

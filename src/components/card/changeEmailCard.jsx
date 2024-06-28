@@ -1,6 +1,7 @@
 import { EmailAuthProvider, reauthenticateWithCredential, signOut, verifyBeforeUpdateEmail } from 'firebase/auth';
 import { useState } from 'react';
 import { Button, Card, Form, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import { auth } from '../../../firebase';
 import { isEmail, isGmail } from '../../utils/validation';
 import PasswordInput from '../input/passwordInput';
@@ -15,13 +16,13 @@ export default function ChangeEmailCard() {
 
         if (loading) return;
 
-        if (!isEmail(email)) return alert('Please enter a valid email!');
-        if (!isGmail(email)) return alert('Please enter a gmail account');
+        if (!isEmail(email)) return toast.error('Please enter a valid email!');
+        if (!isGmail(email)) return toast.error('Please enter a gmail account');
 
         setLoading(true);
 
         try {
-            if (auth.currentUser.email === email) return alert("You can't change your email to your current email");
+            if (auth.currentUser.email === email) return toast.error("You can't change your email to your current email");
 
             if (auth.currentUser) {
                 const credential = EmailAuthProvider.credential(auth.currentUser.email, password);
@@ -29,7 +30,7 @@ export default function ChangeEmailCard() {
 
                 await verifyBeforeUpdateEmail(auth.currentUser, email);
 
-                alert('Please verify your new email to change your email!');
+                toast.success('Please verify your new email to change your email!');
                 signOut(auth);
             }
         } catch (error) {
@@ -42,7 +43,7 @@ export default function ChangeEmailCard() {
                 errorMessage = 'Invalid credentials provided. Please enter your current password.';
             }
 
-            alert(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

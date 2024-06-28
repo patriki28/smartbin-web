@@ -5,14 +5,11 @@ import useFetchData from '../../../hooks/useFetchData';
 import { wasteTypeData } from '../../../mocks/wasteTypeData';
 
 export default function DashboardPage() {
-    const { data: binsData, loading: binsLoading, error: binsError } = useFetchData('bins');
-    const { data: fillLevelsData, loading: fillLevelsLoading, error: fillLevelsError } = useFetchData('fill_level_data');
-    const { data: wastesData, loading: wastesLoading, error: wastesError } = useFetchData('waste_data');
+    const { data: binsData, loading: binsLoading } = useFetchData('bins');
+    const { data: fillLevelsData, loading: fillLevelsLoading } = useFetchData('fill_level_data');
+    const { data: wastesData, loading: wastesLoading } = useFetchData('waste_data');
 
     if (fillLevelsLoading || binsLoading || wastesLoading) return <Loader />;
-
-    const errors = [binsError, fillLevelsError, wastesError].filter(Boolean);
-    if (errors.length > 0) return <div>{errors.join(', ')}</div>;
 
     return (
         <div>

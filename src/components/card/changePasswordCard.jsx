@@ -1,6 +1,7 @@
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { useState } from 'react';
 import { Button, Card, Form, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import { auth } from '../../../firebase';
 import { isStrongPassword } from '../../utils/validation';
 import PasswordInput from '../input/passwordInput';
@@ -18,9 +19,9 @@ export default function ChangePasswordCard() {
 
         setLoading(true);
 
-        if (!currentPassword || !newPassword || !confirmPassword) return alert('All fields are required!');
-        if (!isStrongPassword(newPassword)) return alert('Enter a strong password');
-        if (newPassword !== confirmPassword) return alert('New password and confirmation password do not match.');
+        if (!currentPassword || !newPassword || !confirmPassword) return toast.error('All fields are required!');
+        if (!isStrongPassword(newPassword)) return toast.error('Enter a strong password');
+        if (newPassword !== confirmPassword) return toast.error('New password and confirmation password do not match.');
 
         try {
             if (auth.currentUser) {
@@ -29,7 +30,7 @@ export default function ChangePasswordCard() {
 
                 await updatePassword(auth.currentUser, newPassword);
 
-                alert('You have successfully changed your password');
+                toast.success('You have successfully changed your password');
             }
         } catch (error) {
             console.log(error);
@@ -41,7 +42,7 @@ export default function ChangePasswordCard() {
                 errorMessage = 'Invalid credentials provided. Please enter your current password.';
             }
 
-            alert(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

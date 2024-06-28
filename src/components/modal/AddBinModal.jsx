@@ -1,6 +1,8 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { Button, Form, Modal, Spinner } from 'react-bootstrap';
+import QRCode from 'react-qr-code';
+import { toast } from 'react-toastify';
 import { db } from '../../../firebase';
 
 export default function AddBinModal({ show, handleClose }) {
@@ -10,7 +12,7 @@ export default function AddBinModal({ show, handleClose }) {
     const handleAddBin = async () => {
         if (loading) return;
 
-        if (!binName) return alert('You have to enter a bin name');
+        if (!binName) return toast.error('You have to enter a bin name');
 
         setLoading(true);
 
@@ -19,16 +21,18 @@ export default function AddBinModal({ show, handleClose }) {
             const binDocSnap = await getDoc(binDocRef);
 
             if (binDocSnap.exists()) {
-                alert('Bin name already exists. Please choose a different name.');
+                toast.error('Bin name already exists. Please choose a different name.');
                 setBinName('');
-            } else {
-                await setDoc(binDocRef, { userIds: [] });
-                alert('You have successfully added a bin');
-                setBinName('');
+                return;
             }
+
+            await setDoc(binDocRef, { userIds: [] });
+
+            toast.success('You have successfully added a bin');
+            setBinName('');
         } catch (error) {
             console.log(error);
-            alert(error);
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }
@@ -40,6 +44,9 @@ export default function AddBinModal({ show, handleClose }) {
                 <Modal.Title>Add Bin</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                <div className="flex justify-center qr-code">
+                    <QRCode value={binName} size={256} />
+                </div>
                 <Form>
                     <Form.Group>
                         <Form.Label>Bin Name</Form.Label>
@@ -49,6 +56,7 @@ export default function AddBinModal({ show, handleClose }) {
                             placeholder="Enter bin name"
                             value={binName}
                             onChange={(e) => setBinName(e.target.value)}
+                            maxLength={20}
                         />
                     </Form.Group>
                 </Form>

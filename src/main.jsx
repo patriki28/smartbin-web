@@ -1,27 +1,17 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Loader from './components/Loader.jsx';
-import useNotifications from './hooks/useNotifications.js';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
 import { mainRoutes } from './routes/mainRoutes.jsx';
 
 const router = createBrowserRouter(mainRoutes);
 
-function App() {
-    const { loading, error } = useNotifications();
-
-    if (loading) return <Loader />;
-
-    if (error) return <p>Error fetching notifications: {error.message}</p>;
-
-    return (
-        <React.StrictMode>
-            <RouterProvider router={router} />
-        </React.StrictMode>
-    );
-}
-
-const root = createRoot(document.getElementById('root'));
-root.render(<App />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+        <ToastContainer />
+        <RouterProvider router={router} />
+    </React.StrictMode>
+);
